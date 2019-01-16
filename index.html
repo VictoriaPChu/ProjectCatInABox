@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<!------------------------------------------------->
+
+<ul id="floating-cubes">
+    
+</ul>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.js"
+  integrity="sha256-tA8y0XqiwnpwmOIl3SGAcFl2RvxHjA8qp0+1uCGmRmg="
+  crossorigin="anonymous"></script>
+<script>
+$(function() {
+  // Global variables
+  let i;
+  let timer;
+  let $cubeList = $('#floating-cubes');
+  const sides = [
+    {name: 'front', animation: ''},
+    {name: 'back', animation: 'rotateY(180deg) rotateX(0deg)'},
+    {name: 'right', animation: 'rotateY(90deg)'},
+    {name: 'left', animation: 'rotateY(-90deg)'},
+    {name: 'top', animation: 'rotateX(90deg)'},
+    {name: 'bottom', animation: 'rotateX(-90deg) rotateZ(-180deg)'},
+  ];
+
+  class Cube {
+    constructor(cube) {
+      this.position = cube.position;
+      this.size = cube.size;
+      this.duration = cube.duration;
+    };
+
+    addToDom() {
+      let li = document.createElement('li');
+      li.appendChild(generateCubeDiv(this.size / 2));
+
+      // Add styling to the new li element
+      Object.assign(li.style, {
+        left: this.position + '%',
+        height: this.size + 'px',
+        width: this.size + 'px',
+        webkitPerspective: this.size * 3 + 'px',
+        perspective: this.size * 3 + 'px',
+        webkitAnimation: 'square ' + this.duration + 's',
+        animation: 'square ' + this.duration + 's'
+      });
+
+      // Remove cube after it's finished animating and has reached the top
+      // unless you want to freeze your users browser after a minute
+      $(li).one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd",
+      function(event) {
+        (this).remove();
+      });
+
+      $cubeList.append(li);
+    };
+  };
+
+  // ACTUAL SCRIPT BEGINS
+  
+  startTimer();
+
+  // ACTUAL SCRIPT ENDS (lol)
+
+  // This timer stuff is necessary because otherwise
+  // when a user changes tabs they will be greeted by
+  // a million cubes when they return to this tab
+  //NOTE: doesn't work well on codepen
+  function startTimer() {
+    newCube()
+    timer = window.setInterval(function() {
+      newCube();
+    }, 2500);
+    window.onblur = function() { stopTimer(); };
+    window.onfocus = null;
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    window.onblur = null;
+    window.onfocus = function() { startTimer(); };
+  }
+
+  function newCube() {
+    let cube = new Cube({
+      position: random(0, 90),
+      size: random(30, 80),
+      duration: random(8, 12)
+    });
+    cube.addToDom();
+  };
+
+  function generateCubeDiv(translateSize) {
+    let cubeDiv = document.createElement('div');
+    cubeDiv.className = 'cube';
+
+    // Add all 6 sides to cube div and add their respective styles/classes
+    for (i = 0; i < sides.length; i++) {
+      let sideDiv = document.createElement('div');
+      sideDiv.className = sides[i].name;
+      Object.assign(sideDiv.style, {
+        webkitTransform: sides[i].animation + ' translateZ(' + translateSize + 'px)',
+        transform: sides[i].animation + ' translateZ(' + translateSize + 'px)'
+      });
+      cubeDiv.appendChild(sideDiv);
+    };
+
+    return cubeDiv;
+  };
+
+  function random(min, max) {
+    return Math.floor((Math.random() * max) + min);
+  };
+});
+
+</script>
+
+
+<!------------------------------------------------->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("p").click(function(){
+        $(this).hide();
+    });
+    var a;
+    //Todo make python dictionary app to draw all synonyms of translate
+    //structure [switch path assignment, heuristic score to be updated]
+    var words = {
+         "create": [1,100], //create //quantity //location relative fixed //
+         "translate":[2,100], //translate
+         "rotate": [3,100], //rotate
+         "scale": [4,100], //scale 
+         "delete": [5,100] //erase
+    };
+    console.log(words["a"]==undefined)
+    $("#btn2").click(function(){
+        a=$("#text").val();
+        console.log(a)
+        //Dont take punctuation into account
+        //var punctuationless = a.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        //var finalString = punctuationless.replace(/\s{2,}/g," ");
+        
+        //Take punctuation into account
+        ///a = a.replace("?",".");
+        //add a probability thing here
+        ///a = a.replace("!",".");
+        ///a = a.replace(";",".");
+        //add a probability thing here
+        ///var fragments = a.split(".")
+        ///console.log(fragments[0])
+        var sentence= a.split(" ")
+	var noun=""
+        var preposition= ""
+	var object=""
+
+	//noun group resolver
+	//replace word=="cat" with functions
+        //
+	for (var index in sentence){
+		//console.log(sentence[index])
+		console.log("processing "+sentence[index])
+		
+		if (sentence[index]=="dog") {
+			noun=sentence[index]
+			console.log("noun is " + noun)
+		} else if (sentence[index]=="in" || sentence[index]=="left"|| sentence[index]=="right"){
+			preposition=sentence[index]                        
+                }else if (preposition!= "" && sentence[index]=="frog"){
+			object=sentence[index]
+			console.log("object is " + object)
+		}
+        }
+	console.log(noun+preposition+object)
+ 	var idg= preposition+"Noun"
+	var idgi=preposition+"Object"
+
+	//left handler
+	if (preposition=="left"){
+		var a=idg
+		idg=idgi
+		idgi=a
+		a=object
+		object=noun
+		noun=a}
+	var appendthis = "<div style=\"position:relative;\">  "+"<img id="+idgi +" src=\"png/"+object+".png\""+ "width=\"200\" height=\"200\" >"+"<img id="+idg +" src=\"png/"+noun+".png\" "+ "width=\"200\" height=\"200\" >" +"</div>" ;
+	console.log(idg)
+	console.log(appendthis)
+	console.log(idgi)
+	$("#myCanvas").append(appendthis);
+
+
+         
+               
+        //}
+
+
+
+
+
+
+
+
+
+    });
+});
+</script>
+<style>
+/*
+  Causes body to overflow and should only be used
+  on non-scrolling pages
+*/
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: black;
+}
+
+/*
+  Rotating in-place cube
+*/
+#floating-cubes li {
+  position: relative;
+  -webkit-perspective-origin: 50% 50%;
+  perspective-origin: 50% 50%;
+  -webkit-transition: .3s all ease;
+  transition: .3s all ease;
+}
+.cube {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  -webkit-animation: spin 5s infinite linear;
+  animation: spin 5s infinite linear;
+  -webkit-transition: .5s all ease-in-out;
+  transition: .5s all ease-in-out;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-transform: rotateX(-20deg) rotateY(28deg);
+  transform: rotateX(-20deg) rotateY(28deg);
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+.cube div {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  background-color: #FFF;
+  margin: 0;
+}
+.cube .back { opacity: 0.6; }
+.cube .front { opacity: 0.5; }
+.cube .left { opacity: 0.5; }
+.cube .right { opacity: 0.4; }
+.cube .top { opacity: 0.4; }
+.cube .bottom { opacity: 0.3; }
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotateX(0) rotateY(0);
+    transform: rotateX(0) rotateY(0);
+  }
+  to {
+    -webkit-transform: rotateX(360deg) rotateY(360deg);
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+@keyframes spin {
+  from {
+    -webkit-transform: rotateX(0) rotateY(0);
+    transform: rotateX(0) rotateY(0);
+  }
+  to {
+    -webkit-transform: rotateX(360deg) rotateY(360deg);
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+/*
+  Make cubes float upwards
+*/
+#floating-cubes {
+  z-index: -1;
+  position: absolute; /* mix-blend-mode won't work on <body> */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  mix-blend-mode: difference; /* overlay is similar, exclusion/difference are inverted */
+}
+#floating-cubes li {
+  position: absolute;
+  bottom: -180px;
+  list-style: none;
+  display: block;
+  -webkit-transition-timing-function: linear;
+  transition-timing-function: linear;
+}
+@-webkit-keyframes square {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(calc(-100vh + -300px));
+    transform: translateY(calc(-100vh + -300px));
+  }
+}
+@keyframes square {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(calc(-100vh + -300px));
+    transform: translateY(calc(-100vh + -300px)); /* rotate(600deg) */
+  }
+}
+
+#text {
+  padding: 6px;
+  width: 70%;
+  border: none;
+  font-size: 17px;
+}
+#lol {
+  margin-left: 25%;
+  margin-right: 25%;
+  padding: 6px;
+  width: 50%;
+  border: none;
+  font-size: 17px;
+}
+#btn2 {
+  padding: 6px;
+  width: 20%;
+  border: none;
+  font-size: 17px;
+}
+#myCanvas {
+  margin-left: 25%;
+  margin-right: 25%;
+  width: 50%;
+  padding-bottom:200px;
+  border: none;
+  font-size: 17px;
+}
+#inNoun{
+  width: 200;
+  height:200;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#inObject{
+  width: 200;
+  height:200;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#leftNoun{
+  width: 200;
+  height:200;
+  
+}
+#leftObject{
+  width: 200;
+  height:200;
+ 
+}
+
+#rightNoun{
+  width: 200;
+  height:200;
+  
+}
+#rightObject{
+  width: 200;
+  height:200;
+ 
+}
+
+#nounUnder{
+}
+#object{
+}
+
+
+#nounOnTop{
+}
+#object{
+}
+</style>
+<body><div id="lol">
+  <input id="text" type="text" placeholder="Put a box in a box" name="search">
+  <button id="btn2">Okay!</button> </div>
+<br>
+<div id="myCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
+<div id="huh" style="position:relative;">  
+  <!--<img id="inObject" src="square1.png" width="200" height="200" >  
+  <img id="inNoun" src="cat1.png" width="200" height="200">  -->
+</div>
+Your browser does not support the HTML5 canvas tag.</div>
+
+</div>
+
+
+</body>
+</html>
+
