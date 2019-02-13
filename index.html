@@ -164,12 +164,12 @@ $(document).ready(function(){
 		//console.log(sentence[index])
 		console.log("processing "+sentence[index])
 		
-		if (sentence[index]=="dog") {
+		if (sentence[index]=="cat") {
 			noun=sentence[index]
 			console.log("noun is " + noun)
 		} else if (sentence[index]=="in" || sentence[index]=="left"|| sentence[index]=="right"){
 			preposition=sentence[index]                        
-                }else if (preposition!= "" && sentence[index]=="frog"){
+                }else if (preposition!= "" && sentence[index]=="square"){
 			object=sentence[index]
 			console.log("object is " + object)
 		}
@@ -400,7 +400,7 @@ body {
 }
 </style>
 <body><div id="lol">
-  <input id="text" type="text" placeholder="Put a box in a box" name="search">
+  <input id="text" type="text" placeholder="Put a cat in a square" name="search">
   <button id="btn2">Okay!</button> </div>
 <br>
 <div id="myCanvas" width="200" height="100" style="border:1px solid #d3d3d3;">
